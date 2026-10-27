@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Fest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f6f9;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 180px;
+        }
+
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .add-btn {
+            background-color: green;
+        }
+
+        .update-btn {
+            background-color: orange;
+        }
+
+        .delete-btn {
+            background-color: red;
+        }
+
+        .clear-btn {
+            background-color: gray;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: #ffe9a8 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>College Fest</h2>
+
+    <input type="text" id="festName" placeholder="Fest Name">    
+    <input type="text" id="location" placeholder="Location">    
+
+    <br>
+
+    <button class="add-btn" onclick="addFest()">Add Fest</button>
+    <button class="update-btn" onclick="updateFest()">Update Fest</button>
+    <button class="delete-btn" onclick="deleteFest()">Delete Fest</button>
+    <button class="clear-btn" onclick="clearFields()">Clear</button>
+
+    <table id="festTable">
+        <thead>
+            <tr>
+                <th>Fest Name</th>                
+                <th>Location</th>               
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+let fests = [];
+let selectedIndex = -1;
+
+function addFest() {
+
+    const fest = {
+        festName: document.getElementById("festName").value,        
+        location: document.getElementById("location").value
+        
+    };
+
+    if (
+        fest.festName === "" || 
+        fest.location === ""         
+    ) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    fests.push(fest);
+    displayFests();
+    clearFields();
+}
+
+function displayFests() {
+
+    const tbody = document.querySelector("#festTable tbody");
+    tbody.innerHTML = "";
+
+    fests.forEach((fest, index) => {
+
+        const row = tbody.insertRow();
+
+        if(index === selectedIndex){
+            row.classList.add("selected");
+        }
+
+        row.onclick = function () {
+            selectFest(index);
+        };
+
+        row.insertCell(0).innerHTML = fest.festName;
+        row.insertCell(1).innerHTML = fest.location;        
+    });
+}
+
+function selectFest(index) {
+
+    selectedIndex = index;
+
+    document.getElementById("festName").value =
+        fests[index].festName;
+
+    document.getElementById("location").value =
+        fests[index].location;    
+
+    displayFests();
+}
+
+function updateFest() {
+
+    if (selectedIndex === -1) {
+        alert("Please select a record to update");
+        return;
+    }
+
+    fests[selectedIndex] = {
+        festName: document.getElementById("festName").value,        
+        location: document.getElementById("location").value        
+    };
+
+    displayFests();
+    clearFields();
+}
+
+function deleteFest() {
+
+    if (selectedIndex === -1) {
+        alert("Please select a record to delete");
+        return;
+    }
+
+    if (confirm("Are you sure you want to delete this fest?")) {
+
+        fests.splice(selectedIndex, 1);
+
+        selectedIndex = -1;
+
+        displayFests();
+        clearFields();
+    }
+}
+
+function clearFields() {
+
+    document.getElementById("festName").value = "";    
+    document.getElementById("location").value = "";    
+
+    selectedIndex = -1;
+    displayFests();
+}
+
+</script>
+
+</body>
+</html>
